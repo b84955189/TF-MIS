@@ -234,6 +234,7 @@ public class R {
          String GLOBAL_URL_ARTICLE_DETAIL_PAGE="/WEB-INF/front_stage_view/article_detail.jsp";
          String GLOBAL_URL_FRONT_STAGE_SIDEBAR_COMPONENT ="/WEB-INF/front_stage_view/components/sidebar.jsp";
          String GLOBAL_URL_FRONT_STAGE_NAVIGATION_COMPONENT="/WEB-INF/front_stage_view/components/navigation.jsp";
+         String GLOBAL_URL_WEB_FAVICON_ICON="/favicon.ico";
     }
     /**
      * 全局Servlet信息

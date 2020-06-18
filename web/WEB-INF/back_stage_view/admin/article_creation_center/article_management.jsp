@@ -7,7 +7,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
     <title>文章管理 - 听风-微管理(TF-TIM)后台</title>
-    <link rel="icon" href="favicon.ico" type="image/ico">
+    <link rel="shortcut icon" type="image/x-icon" href="${pageContext.request.contextPath}<%=R.GLOBAL_URL.GLOBAL_URL_WEB_FAVICON_ICON%>" />
     <meta name="keywords" content="听风-微管理(TF-TIM)后台">
     <meta name="description" content="听风-微管理(TF-TIM),小型信息管理系统。">
     <meta name="author" content="Jason.">
