@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns="http://xmlns.jcp.org/xml/ns/javaee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_4_0.xsd"
+         metadata-complete="false"
+         version="4.0">
+
+
+    <!-- Error Page -->
+    <error-page>
+        <error-code>404</error-code>
+        <location>/404.jsp</location>
+    </error-page>
+<!--    <error-page>-->
+<!--        <error-code>500</error-code>-->
+<!--        <location>/500.jsp</location>-->
+<!--    </error-page>-->
+    <!-- *****************Filter********************* -->
+    <!-- 全局编码过滤器 -->
+    <filter>
+        <filter-name>EncodingFilter</filter-name>
+        <filter-class>filter.EncodingFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>EncodingFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+
+    <!-- 离线状态过滤器 -->
+    <filter>
+        <filter-name>OfflineStatusFilter</filter-name>
+        <filter-class>filter.OfflineStatusFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>OfflineStatusFilter</filter-name>
+        <url-pattern>/systemAction.do</url-pattern>
+    <!--<url-pattern>/articleAction.do</url-pattern>-->
+    </filter-mapping>
+    <!-- 在线状态过滤器 -->
+    <filter>
+        <filter-name>OnlineStatusFilter</filter-name>
+        <filter-class>filter.OnlineStatusFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>OnlineStatusFilter</filter-name>
+        <url-pattern>/admin</url-pattern>
+        <url-pattern>/loginAction.do</url-pattern>
+    </filter-mapping>
+    <!-- 权限访问过滤器 -->
+    <filter>
+        <filter-name>PermissionFilter</filter-name>
+        <filter-class>filter.PermissionFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>PermissionFilter</filter-name>
+        <url-pattern>/WEB-INF/back_stage_view/admin/*</url-pattern>
+        <url-pattern>/articleAction.do</url-pattern>
+        <dispatcher>FORWARD</dispatcher>
+        <dispatcher>REQUEST</dispatcher>
+    </filter-mapping>
+    <!-- ******************************************** -->
+
+
+    <!-- **************Servlet********************* -->
+    <!-- 配置 Druid 监控信息显示页面 -->
+    <servlet>
+        <servlet-name>DruidStatView</servlet-name>
+        <servlet-class>com.alibaba.druid.support.http.StatViewServlet</servlet-class>
+        <init-param>
+            <!-- 允许清空统计数据 -->
+            <param-name>resetEnable</param-name>
+            <param-value>true</param-value>
+        </init-param>
+        <init-param>
+            <!-- 用户名 -->
+            <param-name>loginUsername</param-name>
+            <param-value>druid</param-value>
+        </init-param>
+        <init-param>
+            <!-- 密码 -->
+            <param-name>loginPassword</param-name>
+            <param-value>123</param-value>
+        </init-param>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>DruidStatView</servlet-name>
+        <url-pattern>/druid/*</url-pattern>
+    </servlet-mapping>
+    <!-- ******************************************** -->
+</web-app>
