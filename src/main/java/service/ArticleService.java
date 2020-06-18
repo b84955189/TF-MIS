@@ -153,7 +153,7 @@ public class ArticleService {
      */
     public boolean updateArticle(Article article) throws SQLException {
         return dao.update(R.MYSQL.MYSQL_PRE_SQL_SYNTAX_UPDATE_ARTICLE,new Object[]{
-                article.getArticle_title(),article.getArticle_content(),article.getArticle_type(),article.getArticle_id()
+                article.getArticle_title(),article.getArticle_content(),article.getArticle_type(),article.getArticle_summary(),article.getArticle_id()
         });
     }
     /**

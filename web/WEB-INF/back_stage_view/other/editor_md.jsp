@@ -108,7 +108,7 @@
                         </button>
                     </div>
                     <div class="modal-body">
-                        <textarea class="form-control" style="resize: none;height: 100px" name="<%=R.REQUEST.REQUEST_FILED_ARTICLE_SUMMARY%>" id="id_textarea_article_summary" maxlength="100" style="width: 100%;height: 100%;"></textarea>
+                        <textarea class="form-control" style="resize: none;height: 100px" name="<%=R.REQUEST.REQUEST_FILED_ARTICLE_SUMMARY%>" id="id_textarea_article_summary" maxlength="150" style="width: 100%;height: 100%;"></textarea>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>
