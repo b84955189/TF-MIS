@@ -109,7 +109,7 @@
         offset: 0,//起始索引
         page: 1,//初始页码
         sort: '<%=R.REQUEST.REQUEST_FILED_ARTICLE_ID%>', // 排序的列名 ---暂无作用
-        sortOrder: 'asc',      // 排序方式'asc' 'desc'
+        sortOrder: 'desc',      // 排序方式'asc' 'desc'
         searchType: '<%=R.REQUEST.REQUEST_FILED_ARTICLE_TYPE%>',//前台文章默认检索方式
         snippet: ''//默认检索全部类型
     };

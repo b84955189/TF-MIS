@@ -50,7 +50,8 @@ public class ArticleService {
                 author.getUser_login(),
                 article.getArticle_summary(),
                 article.getArticle_uuid(),
-                article.getArticle_status()
+                article.getArticle_status(),
+                article.getArticle_poster()
         });
     }
     /**
@@ -68,12 +69,12 @@ public class ArticleService {
         if(R.MYSQL.MYSQL_TABLE_TIM_ARTICLE_FILED_ARTICLE_TITLE.equalsIgnoreCase(page.getSearchType())){
             //标题-模糊查询检索
             if(page.getSnippet().trim().equals("")){
-                list.addAll(dao.getObjectList(Article.class,R.MYSQL.MYSQL_PRE_SQL_SYNTAX_QUERY_ARTICLE_NOT_ARTICLE_CONTENT_BY_LIKE_ARTICLE_TITLE+R.MYSQL.MYSQL_PER_SQL_LIMIT_TWO,new Object[]{
+                list.addAll(dao.getObjectList(Article.class,R.MYSQL.MYSQL_PRE_SQL_SYNTAX_QUERY_ARTICLE_NOT_ARTICLE_CONTENT_BY_LIKE_ARTICLE_TITLE+R.MYSQL.MYSQL_SQL_SYNTAX_ORDER_BY+" "+page.getSort()+" "+page.getSortOrder()+" "+R.MYSQL.MYSQL_PER_SQL_LIMIT_TWO,new Object[]{
                         page.getOffset(), page.getLimit()
                 }));
                 total=dao.getCount(R.MYSQL.MYSQL_PRE_SQL_SYNTAX_QUERY_ARTICLE_BY_LIKE_ARTICLE_TITLE_QUERY_COUNT,new Object[]{});
             }else{
-                list.addAll(dao.getObjectList(Article.class,R.MYSQL.MYSQL_PRE_SQL_SYNTAX_QUERY_ARTICLE_NOT_ARTICLE_CONTENT_BY_LIKE_ARTICLE_TITLE+R.MYSQL.MYSQL_PRE_SQL_SYNTAX_QUERY_ARTICLE_NOT_ARTICLE_CONTENT_BY_LIKE_ARTICLE_TITLE_WHERE_SYNTAX+R.MYSQL.MYSQL_PER_SQL_LIMIT_TWO,new Object[]{
+                list.addAll(dao.getObjectList(Article.class,R.MYSQL.MYSQL_PRE_SQL_SYNTAX_QUERY_ARTICLE_NOT_ARTICLE_CONTENT_BY_LIKE_ARTICLE_TITLE+R.MYSQL.MYSQL_PRE_SQL_SYNTAX_QUERY_ARTICLE_NOT_ARTICLE_CONTENT_BY_LIKE_ARTICLE_TITLE_WHERE_SYNTAX+R.MYSQL.MYSQL_SQL_SYNTAX_ORDER_BY+" "+page.getSort()+" "+page.getSortOrder()+" "+R.MYSQL.MYSQL_PER_SQL_LIMIT_TWO,new Object[]{
                         "%"+page.getSnippet()+"%",page.getOffset(), page.getLimit()
                 }));
                 total=dao.getCount(R.MYSQL.MYSQL_PRE_SQL_SYNTAX_QUERY_ARTICLE_BY_LIKE_ARTICLE_TITLE_QUERY_COUNT+R.MYSQL.MYSQL_PRE_SQL_SYNTAX_QUERY_ARTICLE_BY_LIKE_ARTICLE_TITLE_QUERY_COUNT_WHERE_SYNTAX,new Object[]{
@@ -85,12 +86,12 @@ public class ArticleService {
         }else if(R.MYSQL.MYSQL_TABLE_TIM_ARTICLE_FILED_ARTICLE_AUTHOR.equalsIgnoreCase(page.getSearchType())){
             //用户名检索
             if(page.getSnippet().trim().equals("")){
-                list.addAll(dao.getObjectList(Article.class,R.MYSQL.MYSQL_PRE_SQL_SYNTAX_QUERY_ARTICLE_NOT_ARTICLE_CONTENT_BY_EQUAL_ARTICLE_AUTHOR+R.MYSQL.MYSQL_PER_SQL_LIMIT_TWO,new Object[]{
+                list.addAll(dao.getObjectList(Article.class,R.MYSQL.MYSQL_PRE_SQL_SYNTAX_QUERY_ARTICLE_NOT_ARTICLE_CONTENT_BY_EQUAL_ARTICLE_AUTHOR+R.MYSQL.MYSQL_SQL_SYNTAX_ORDER_BY+" "+page.getSort()+" "+page.getSortOrder()+" "+R.MYSQL.MYSQL_PER_SQL_LIMIT_TWO,new Object[]{
                         page.getOffset(), page.getLimit()
                 }));
                 total=dao.getCount(R.MYSQL.MYSQL_PRE_SQL_SYNTAX_QUERY_ARTICLE_BY_EQUAL_ARTICLE_AUTHOR_QUERY_COUNT,new Object[]{});
             }else{
-                list.addAll(dao.getObjectList(Article.class,R.MYSQL.MYSQL_PRE_SQL_SYNTAX_QUERY_ARTICLE_NOT_ARTICLE_CONTENT_BY_EQUAL_ARTICLE_AUTHOR+R.MYSQL.MYSQL_PRE_SQL_SYNTAX_QUERY_ARTICLE_NOT_ARTICLE_CONTENT_BY_EQUAL_ARTICLE_AUTHOR_WHERE_SYNTAX+R.MYSQL.MYSQL_PER_SQL_LIMIT_TWO,new Object[]{
+                list.addAll(dao.getObjectList(Article.class,R.MYSQL.MYSQL_PRE_SQL_SYNTAX_QUERY_ARTICLE_NOT_ARTICLE_CONTENT_BY_EQUAL_ARTICLE_AUTHOR+R.MYSQL.MYSQL_PRE_SQL_SYNTAX_QUERY_ARTICLE_NOT_ARTICLE_CONTENT_BY_EQUAL_ARTICLE_AUTHOR_WHERE_SYNTAX+R.MYSQL.MYSQL_SQL_SYNTAX_ORDER_BY+" "+page.getSort()+" "+page.getSortOrder()+" "+R.MYSQL.MYSQL_PER_SQL_LIMIT_TWO,new Object[]{
                         page.getSnippet(),page.getOffset(), page.getLimit()
                 }));
                 total=dao.getCount(R.MYSQL.MYSQL_PRE_SQL_SYNTAX_QUERY_ARTICLE_BY_EQUAL_ARTICLE_AUTHOR_QUERY_COUNT+R.MYSQL.MYSQL_PRE_SQL_SYNTAX_QUERY_ARTICLE_NOT_ARTICLE_CONTENT_BY_EQUAL_ARTICLE_AUTHOR_WHERE_SYNTAX,new Object[]{
@@ -99,18 +100,18 @@ public class ArticleService {
             }
             //类别检索
         }else if(R.MYSQL.MYSQL_TABLE_TIM_ARTICLE_FILED_ARTICLE_TYPE.equalsIgnoreCase(page.getSearchType())){
-            //如果没有指明类别，则检索全部
+            //如果没有指明类别，则检索全部---已经通过审核的
             if(page.getSnippet().trim().equals("")){
-                list.addAll(dao.getObjectList(Article.class,R.MYSQL.MYSQL_PRE_SQL_SYNTAX_QUERY_ARTICLE_NOT_ARTICLE_CONTENT_BY_EQUAL_ARTICLE_TYPE+R.MYSQL.MYSQL_PER_SQL_LIMIT_TWO,new Object[]{
-                        page.getOffset(), page.getLimit()
+                list.addAll(dao.getObjectList(Article.class,R.MYSQL.MYSQL_PRE_SQL_SYNTAX_QUERY_ARTICLE_NOT_ARTICLE_CONTENT_BY_EQUAL_ARTICLE_TYPE+R.MYSQL.MYSQL_PRE_SQL_WHERE_ARTICLE_STATUS+R.MYSQL.MYSQL_SQL_SYNTAX_ORDER_BY+" "+page.getSort()+" "+page.getSortOrder()+" "+R.MYSQL.MYSQL_PER_SQL_LIMIT_TWO,new Object[]{
+                        Article.PASS_STATUS,page.getOffset(), page.getLimit()
                 }));
-                total=dao.getCount(R.MYSQL.MYSQL_PRE_SQL_SYNTAX_QUERY_ARTICLE_BY_EQUAL_ARTICLE_TYPE_QUERY_COUNT,new Object[]{});
+                total=dao.getCount(R.MYSQL.MYSQL_PRE_SQL_SYNTAX_QUERY_ARTICLE_BY_EQUAL_ARTICLE_TYPE_QUERY_COUNT+R.MYSQL.MYSQL_PRE_SQL_WHERE_ARTICLE_STATUS,new Object[]{Article.PASS_STATUS});
             }else{
-                list.addAll(dao.getObjectList(Article.class,R.MYSQL.MYSQL_PRE_SQL_SYNTAX_QUERY_ARTICLE_NOT_ARTICLE_CONTENT_BY_EQUAL_ARTICLE_TYPE+R.MYSQL.MYSQL_PRE_SQL_SYNTAX_QUERY_ARTICLE_NOT_ARTICLE_CONTENT_BY_EQUAL_ARTICLE_TYPE_WHERE_SYNTAX+R.MYSQL.MYSQL_PER_SQL_LIMIT_TWO,new Object[]{
-                        page.getSnippet(),page.getOffset(), page.getLimit()
+                list.addAll(dao.getObjectList(Article.class,R.MYSQL.MYSQL_PRE_SQL_SYNTAX_QUERY_ARTICLE_NOT_ARTICLE_CONTENT_BY_EQUAL_ARTICLE_TYPE+R.MYSQL.MYSQL_PRE_SQL_SYNTAX_QUERY_ARTICLE_NOT_ARTICLE_CONTENT_BY_EQUAL_ARTICLE_TYPE_WHERE_SYNTAX+R.MYSQL.MYSQL_PRE_SQL_AND_ARTICLE_STATUS+R.MYSQL.MYSQL_SQL_SYNTAX_ORDER_BY+" "+page.getSort()+" "+page.getSortOrder()+" "+R.MYSQL.MYSQL_PER_SQL_LIMIT_TWO,new Object[]{
+                        page.getSnippet(),Article.PASS_STATUS,page.getOffset(), page.getLimit()
                 }));
-                total=dao.getCount(R.MYSQL.MYSQL_PRE_SQL_SYNTAX_QUERY_ARTICLE_BY_EQUAL_ARTICLE_TYPE_QUERY_COUNT+R.MYSQL.MYSQL_PRE_SQL_SYNTAX_QUERY_ARTICLE_NOT_ARTICLE_CONTENT_BY_EQUAL_ARTICLE_TYPE_WHERE_SYNTAX,new Object[]{
-                        page.getSnippet()
+                total=dao.getCount(R.MYSQL.MYSQL_PRE_SQL_SYNTAX_QUERY_ARTICLE_BY_EQUAL_ARTICLE_TYPE_QUERY_COUNT+R.MYSQL.MYSQL_PRE_SQL_SYNTAX_QUERY_ARTICLE_NOT_ARTICLE_CONTENT_BY_EQUAL_ARTICLE_TYPE_WHERE_SYNTAX+R.MYSQL.MYSQL_PRE_SQL_AND_ARTICLE_STATUS,new Object[]{
+                        page.getSnippet(),Article.PASS_STATUS
                 });
             }
         }else {
@@ -153,7 +154,7 @@ public class ArticleService {
      */
     public boolean updateArticle(Article article) throws SQLException {
         return dao.update(R.MYSQL.MYSQL_PRE_SQL_SYNTAX_UPDATE_ARTICLE,new Object[]{
-                article.getArticle_title(),article.getArticle_content(),article.getArticle_type(),article.getArticle_summary(),article.getArticle_id()
+                article.getArticle_title(),article.getArticle_content(),article.getArticle_type(),article.getArticle_summary(),article.getArticle_poster(),article.getArticle_id()
         });
     }
     /**

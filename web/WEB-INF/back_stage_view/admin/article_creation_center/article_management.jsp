@@ -168,13 +168,13 @@
             showToggle: false,        // 是否显示详细视图和列表视图的切换按钮(clickToSelect同时设置为true时点击会报错)
 
             pagination: true,                    // 是否显示分页
-            sortOrder: "asc",                    // 排序方式
+            sortOrder: "desc",                    // 排序方式
             queryParams: function(params) {
                 var temp = {
                     limit: params.limit,         // 每页数据量
                     offset: params.offset,       // sql语句起始索引
                     page: (params.offset / params.limit) + 1,
-                    sort: params.sort,           // 排序的列名
+                    sort: '<%=R.REQUEST.REQUEST_FILED_ARTICLE_ID%>',           // 排序的列名
                     sortOrder: params.order,      // 排序方式'asc' 'desc'
                     searchType: var_searchType,
                     snippet: var_snippet

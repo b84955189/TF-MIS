@@ -22,14 +22,18 @@
                     <li class="nav-item active">
                         <a class="nav-link" href="${pageContext.request.contextPath}<%=R.GLOBAL_URL.GLOBAL_URL_INDEX_PAGE%>">首页</a>
                     </li>
+                    <%--TODO: delete the Test Page.--%>
                     <li class="nav-item">
-                        <a class="nav-link" href="${pageContext.request.contextPath}<%=R.GLOBAL_URL.GLOBAL_URL_INDEX_PAGE%>">技术</a>
+                        <a class="nav-link" href="${pageContext.request.contextPath}<%=R.GLOBAL_SERVLET_INFO.FRONT_STAGE_SERVLET.FRONT_STAGE_SERVLET_URL_PATTERN%>?<%=R.REQUEST.REQUEST_METHOD%>=<%=R.GLOBAL_SERVLET_INFO.FRONT_STAGE_SERVLET.FRONT_STAGE_SERVLET_METHOD_TO_POSTER_GALLERY_VIEW%>">海报相册</a>
                     </li>
+<%--                    <li class="nav-item">--%>
+<%--                        <a class="nav-link" href="${pageContext.request.contextPath}<%=R.GLOBAL_URL.GLOBAL_URL_INDEX_PAGE%>">技术</a>--%>
+<%--                    </li>--%>
+<%--                    <li class="nav-item">--%>
+<%--                        <a class="nav-link" href="${pageContext.request.contextPath}<%=R.GLOBAL_URL.GLOBAL_URL_INDEX_PAGE%>">感悟</a>--%>
+<%--                    </li>--%>
                     <li class="nav-item">
-                        <a class="nav-link" href="${pageContext.request.contextPath}<%=R.GLOBAL_URL.GLOBAL_URL_INDEX_PAGE%>">感悟</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="${pageContext.request.contextPath}<%=R.GLOBAL_URL.GLOBAL_URL_INDEX_PAGE%>">关于我</a>
+                        <a class="nav-link" href="${pageContext.request.contextPath}<%=R.GLOBAL_SERVLET_INFO.FRONT_STAGE_SERVLET.FRONT_STAGE_SERVLET_URL_PATTERN%>?<%=R.REQUEST.REQUEST_METHOD%>=<%=R.GLOBAL_SERVLET_INFO.FRONT_STAGE_SERVLET.FRONT_STAGE_SERVLET_METHOD_TO_ABOUT_ME_VIEW%>">关于我</a>
                     </li>
                 </ul>
 
