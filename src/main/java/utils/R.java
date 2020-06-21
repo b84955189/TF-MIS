@@ -33,9 +33,13 @@ public class R {
         String REQUEST_FILED_ARTICLE_TITLE="article_title";
         String REQUEST_FILED_ARTICLE_CONTENT="article_content";
         String REQUEST_FILED_ARTICLE_SUMMARY="article_summary";
+        String REQUEST_FILED_ARTICLE_READ_COUNT="article_read_count";
         String REQUEST_FILED_ARTICLE_AUTHOR="article_author";
         String REQUEST_FILED_ARTICLE_POSTER="article_poster";
         String REQUEST_FILED_ARTICLE_UUID="article_uuid";
+        String REQUEST_FILED_ARTICLE_TYPE_FILED_ARTICLE_TYPE_ID="article_type_id";
+
+        String REQUEST_FILED_ARTICLE_TYPE_SEARCH_SNIPPET="article_type_search_snippet";
 
         String REQUEST_FILED_IDS="ids";
         String REQUEST_FILED_SIGN="sign";
@@ -119,6 +123,7 @@ public class R {
         //Article Type
         String JSON_FILED_ARTICLE_TYPE_FILED_ARTICLE_TYPE_ID="article_type_id";
         String JSON_FILED_ARTICLE_TYPE_FILED_ARTICLE_TYPE_NAME="article_type_name";
+        String JSON_FILED_ARTICLE_TYPE_FILED_ARTICLE_TYPE_COUNT="article_type_count";
 
         //Article
         String JSON_FILED_ARTICLE_FILED_ARTICLE_ID="article_id";
@@ -288,6 +293,8 @@ public class R {
             //TODO: delete the Test Method.
             String FRONT_STAGE_SERVLET_METHOD_TO_POSTER_GALLERY_VIEW="toPosterGalleryView";
             String FRONT_STAGE_SERVLET_METHOD_TO_ABOUT_ME_VIEW="toAboutMeView";
+            String FRONT_STAGE_SERVLET_METHOD_TO_START_ARTICLE_TYPE_SEARCH="toStartArticleTypeSearch";
+
 
 
 

@@ -32,6 +32,7 @@ public class BaseServlet extends HttpServlet {
             method.invoke(this,req,resp);
         }catch (Exception e){
             e.printStackTrace();
+            resp.sendRedirect(req.getContextPath()+R.GLOBAL_URL.GLOBAL_URL_INDEX_PAGE);
         }
     }
 }

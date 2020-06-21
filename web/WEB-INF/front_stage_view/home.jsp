@@ -92,7 +92,6 @@
         <!-- end container -->
     </section>
 </div>
-<script type="text/javascript" src="${pageContext.request.contextPath}/static/light_year_front_ui/js/jquery.min.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/static/light_year_front_ui/js/jquery.nicescroll.min.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/static/light_year_front_ui/js/bootstrap.min.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/static/light_year_front_ui/js/main.min.js"></script>
@@ -101,6 +100,7 @@
 <script src="${pageContext.request.contextPath}/static/light_year_ui/js/bootstrap-notify.min.js"></script>
 <script src="${pageContext.request.contextPath}/static/light_year_ui/js/loading.js"></script>
 <script>
+
     //滚动下拉请求标记   无正在请求的AJAX（false）/存在正在请求的AJAX（true）
     var scroll_pull_down_request_sign=false;
     //分页起始参数
@@ -111,7 +111,7 @@
         sort: '<%=R.REQUEST.REQUEST_FILED_ARTICLE_ID%>', // 排序的列名 ---暂无作用
         sortOrder: 'desc',      // 排序方式'asc' 'desc'
         searchType: '<%=R.REQUEST.REQUEST_FILED_ARTICLE_TYPE%>',//前台文章默认检索方式
-        snippet: ''//默认检索全部类型
+        snippet: '${requestScope.article_type_search_snippet}'//默认检索全部类型
     };
     //动态改变分页查询参数函数
     function queryParams(params){
@@ -125,10 +125,10 @@
             snippet: params.snippet//默认检索全部类型
         };
     }
+
     $(function () {
         //初始化请求文章数据
         waterallowData();
-
         //图片查询中正对浏览器主页面滚动事件处理(瀑布流)。只能使用window方式绑定，使用document方式不起作用
         $(window).on('scroll',function(){
             if(scrollTop() + windowHeight() >= (documentHeight() - 30/*滚动响应区域高度取30px*/)){
@@ -167,7 +167,14 @@
                                 $('.waterfllow-loading').css('visibility','hidden');
                                 //添加到底提示语
                                 $('#id_div_article_list_box').append('<div class="arrive_bottom_tips_box" style="text-align: center;border-top: 1px solid #ddd"><p style="margin-top: 10px;color: #00aaaa"><i class="mdi mdi-emoticon-poop"></i>&nbsp;到底啦~</p></div>');
-                            }else{
+                            }if(article_list_data.<%=R.JSON.JSON_FILED_TABLE_PAGINATION_TOTAL%><=page_params.limit){
+                                //不再AJAX请求
+                                scroll_pull_down_request_sign=true;
+                                //隐藏加载条
+                                $('.waterfllow-loading').css('visibility','hidden');
+                                //添加到底提示语
+                                $('#id_div_article_list_box').append('<div class="arrive_bottom_tips_box" style="text-align: center;border-top: 1px solid #ddd"><p style="margin-top: 10px;color: #00aaaa"><i class="mdi mdi-emoticon-poop"></i>&nbsp;到底啦~</p></div>');
+                            } else{
                                 //页码+1
                                 page_params.page++;
                             }
@@ -198,7 +205,6 @@
         //追加元素
         function appendArticle(rows) {
             for(let article of rows){
-                console.log(article);
                 let li_arc_mate_arc_post_time='<li><i class="mdi mdi-calendar"></i><span class="arc-post-time">'+article.<%=R.JSON.JSON_FILED_ARTICLE_FILED_ARTICLE_RELEASE_TIME%>+'</span></li>';
                 let li_arc_meta_arc_reader_count='<li><i class="mdi mdi-eye"></i> <span class="arc-reader-count">'+article.<%=R.JSON.JSON_FILED_ARTICLE_FILED_ARTICLE_READ_COUNT%>+'</span>阅读</li>';
                 /*TODO: add a JSON field.*/

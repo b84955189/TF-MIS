@@ -52,6 +52,20 @@ public class FrontStageServlet extends BaseServlet{
         request.getRequestDispatcher(R.GLOBAL_URL.GLOBAL_URL_FRONT_STAGE_GALLERY_PAGE).forward(request,response);
     }
     /**
+     * 分类专栏搜索-绑定类型数据
+     * @author Jason
+     * @date 9:44 AM 6/21/2020
+     * @param
+     * @return
+     */
+    protected void toStartArticleTypeSearch(HttpServletRequest request,HttpServletResponse response) throws ServletException, IOException {
+        String articleTypeID = request.getParameter(R.REQUEST.REQUEST_FILED_ARTICLE_TYPE_FILED_ARTICLE_TYPE_ID);
+        if(articleTypeID!=null){
+            request.setAttribute(R.REQUEST.REQUEST_FILED_ARTICLE_TYPE_SEARCH_SNIPPET,articleTypeID);
+        }
+        request.getRequestDispatcher(R.GLOBAL_URL.GLOBAL_URL_HOME_PAGE).forward(request,response);
+    }
+    /**
      * 转发至关于我页
      * @author Jason
      * @date 8:24 PM 6/20/2020

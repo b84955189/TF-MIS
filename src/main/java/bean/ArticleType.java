@@ -14,4 +14,5 @@ import lombok.ToString;
 public class ArticleType {
     private int article_type_id;
     private String article_type_name;
+    private int article_type_count;
 }

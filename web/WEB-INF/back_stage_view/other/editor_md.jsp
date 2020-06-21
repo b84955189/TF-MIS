@@ -284,88 +284,104 @@
         $.ajax({
             type: 'post',
             url: '${pageContext.request.contextPath}<%=R.GLOBAL_SERVLET_INFO.ARTICLE_SERVLET.ARTICLE_SERVLET_URL_PATTERN%>?<%=R.REQUEST.REQUEST_METHOD%>=<%=R.GLOBAL_SERVLET_INFO.ARTICLE_SERVLET.ARTICLE_SERVLET_METHOD_TO_GET_ARTICLE_TYPES%>',
+            timeout: 8000,
             success: function (msg) {
+                try{
+                    let article_type_data=JSON.parse(msg).<%=R.JSON.JSON_FILED_DATA%>;
+                    for(let i=0;i<article_type_data.length;i++){
+                        $('#id_select_article_type').append('<option value="'+article_type_data[i].<%=R.JSON.JSON_FILED_ARTICLE_TYPE_FILED_ARTICLE_TYPE_ID%>+'">'+article_type_data[i].<%=R.JSON.JSON_FILED_ARTICLE_TYPE_FILED_ARTICLE_TYPE_NAME%>+'</option>');
+                    }
 
-                let article_type_data=JSON.parse(msg).<%=R.JSON.JSON_FILED_DATA%>;
-                for(let i=0;i<article_type_data.length;i++){
-                    $('#id_select_article_type').append('<option value="'+article_type_data[i].<%=R.JSON.JSON_FILED_ARTICLE_TYPE_FILED_ARTICLE_TYPE_ID%>+'">'+article_type_data[i].<%=R.JSON.JSON_FILED_ARTICLE_TYPE_FILED_ARTICLE_TYPE_NAME%>+'</option>');
-                }
-
-                //判断打开编辑器目的
-                if('<%=R.REQUEST.REQUEST_FILED_OPEN_EDITOR_INTENTION_EDIT_ARTICLE%>'==='${sessionScope.intention}'){
-                    //设置请求url
-                    editor_intention=editor_intention_update;
-                    //设置提示语
-                    editor_intention_tips_failed='更新失败，请重新尝试！';
-                    editor_intention_tips_success='更新成功！';
-                    //获取文章信息
-                    $.ajax({
+                    //判断打开编辑器目的
+                    if('<%=R.REQUEST.REQUEST_FILED_OPEN_EDITOR_INTENTION_EDIT_ARTICLE%>'==='${sessionScope.intention}'){
+                        //设置请求url
+                        editor_intention=editor_intention_update;
+                        //设置提示语
+                        editor_intention_tips_failed='更新失败，请重新尝试！';
+                        editor_intention_tips_success='更新成功！';
+                        //获取文章信息
+                        $.ajax({
                             url: '${pageContext.request.contextPath}<%=R.GLOBAL_SERVLET_INFO.ARTICLE_SERVLET.ARTICLE_SERVLET_URL_PATTERN%>?<%=R.REQUEST.REQUEST_METHOD%>=<%=R.GLOBAL_SERVLET_INFO.ARTICLE_SERVLET.ARTICLE_SERVLET_METHOD_TO_GET_ARTICLES%>&<%=R.REQUEST.REQUEST_FILED_ARTICLE_ID%>=${sessionScope.article_id}',
                             type: 'get',
                             data: {<%=R.REQUEST.REQUEST_FILED_ARTICLE_ID%>:${sessionScope.article_id}},
-                            timeout: 8000,
+                        timeout: 8000,
                             success: function (msg) {
-                                //隐藏加载动画
-                                loading.loading('hide');
-                                try{
-                                     article_data=JSON.parse(msg);
-                                    //填充隐藏域文章id
-                                    $('#id_input_hidden_article_id').val(article_data.<%=R.JSON.JSON_FILED_ARTICLE_FILED_ARTICLE_ID%>);
-                                    //填充标题
-                                    $('#id_input_article_title').val(article_data.<%=R.JSON.JSON_FILED_ARTICLE_FILED_ARTICLE_TITLE%>);
-                                    //填充下拉框
-                                    $("#id_select_article_type").each(function(){
-                                        $(this).find("option").eq(article_data.<%=R.JSON.JSON_FILED_ARTICLE_FILED_ARTICLE_TYPE%>).prop("selected",true);
-                                    });
-                                    //填充摘要
-                                    $('#id_textarea_article_summary').val(article_data.<%=R.JSON.JSON_FILED_ARTICLE_FILED_ARTICLE_SUMMARY%>);
-                                    //填充海报
-                                    if(article_data.<%=R.JSON.JSON_FILED_ARTICLE_FILED_ARTICLE_POSTER%>!=''){
-                                        $('#id_img_article_poster').css('display','block');
-                                        $('#id_img_article_poster').attr('src',article_data.<%=R.JSON.JSON_FILED_ARTICLE_FILED_ARTICLE_POSTER%>);
-                                        $('#id_input_article_poster').val(article_data.<%=R.JSON.JSON_FILED_ARTICLE_FILED_ARTICLE_POSTER%>);
-                                        $('#id_btn_upload_image').val('删除海报');
-                                        $('#id_btn_upload_image').unbind('click',upload_btn_event);
-                                        $('#id_btn_upload_image').on('click',del_poster_btn_event);
-                                    }else{
-                                        $('#id_img_article_poster').css('display','none');
-                                        $('#id_btn_upload_image').val('上传海报');
-                                    }
-                                    //填充内容
-                                    $('#id_editor_textarea').val(article_data.<%=R.JSON.JSON_FILED_ARTICLE_FILED_ARTICLE_CONTENT%>);
-
-                                }catch (e) {
-                                    loading.notify('数据拉取失败！请重新访问', 'danger', 3000, 'mdi mdi-emoticon-sad', 'top', 'center');
-                                    //设置0.5s后返回管理页
-                                    setTimeout(function(){
-                                        window.location.href='${pageContext.request.contextPath}<%=R.GLOBAL_SERVLET_INFO.ARTICLE_SERVLET.ARTICLE_SERVLET_URL_PATTERN%>?<%=R.REQUEST.REQUEST_METHOD%>=<%=R.GLOBAL_SERVLET_INFO.ARTICLE_SERVLET.ARTICLE_SERVLET_METHOD_TO_ARTICLE_MANAGEMENT_VIEW%>';
-                                    },5e2);
+                            //隐藏加载动画
+                            loading.loading('hide');
+                            try{
+                                article_data=JSON.parse(msg);
+                                //填充隐藏域文章id
+                                $('#id_input_hidden_article_id').val(article_data.<%=R.JSON.JSON_FILED_ARTICLE_FILED_ARTICLE_ID%>);
+                                //填充标题
+                                $('#id_input_article_title').val(article_data.<%=R.JSON.JSON_FILED_ARTICLE_FILED_ARTICLE_TITLE%>);
+                                //填充下拉框
+                                $("#id_select_article_type").each(function(){
+                                    $(this).find("option").eq(article_data.<%=R.JSON.JSON_FILED_ARTICLE_FILED_ARTICLE_TYPE%>).prop("selected",true);
+                                });
+                                //填充摘要
+                                $('#id_textarea_article_summary').val(article_data.<%=R.JSON.JSON_FILED_ARTICLE_FILED_ARTICLE_SUMMARY%>);
+                                //填充海报
+                                if(article_data.<%=R.JSON.JSON_FILED_ARTICLE_FILED_ARTICLE_POSTER%>!=''){
+                                    $('#id_img_article_poster').css('display','block');
+                                    $('#id_img_article_poster').attr('src',article_data.<%=R.JSON.JSON_FILED_ARTICLE_FILED_ARTICLE_POSTER%>);
+                                    $('#id_input_article_poster').val(article_data.<%=R.JSON.JSON_FILED_ARTICLE_FILED_ARTICLE_POSTER%>);
+                                    $('#id_btn_upload_image').val('删除海报');
+                                    $('#id_btn_upload_image').unbind('click',upload_btn_event);
+                                    $('#id_btn_upload_image').on('click',del_poster_btn_event);
+                                }else{
+                                    $('#id_img_article_poster').css('display','none');
+                                    $('#id_btn_upload_image').val('上传海报');
                                 }
+                                //填充内容
+                                $('#id_editor_textarea').val(article_data.<%=R.JSON.JSON_FILED_ARTICLE_FILED_ARTICLE_CONTENT%>);
 
-
-
-                            },
-                             error: function () {
-                                 //隐藏加载动画
-                                 loading.loading('hide');
-                                 loading.notify('数据拉取失败！请重新访问', 'danger', 3000, 'mdi mdi-emoticon-sad', 'top', 'center');
-                                 //设置0.5s后返回管理页
-                                 setTimeout(function(){
-                                     window.loading.href='${pageContext.request.contextPath}<%=R.GLOBAL_SERVLET_INFO.ARTICLE_SERVLET.ARTICLE_SERVLET_URL_PATTERN%>?<%=R.REQUEST.REQUEST_METHOD%>=<%=R.GLOBAL_SERVLET_INFO.ARTICLE_SERVLET.ARTICLE_SERVLET_METHOD_TO_ARTICLE_MANAGEMENT_VIEW%>';
-                                 },5e2);
+                            }catch (e) {
+                                loading.notify('数据拉取失败！请重新访问', 'danger', 3000, 'mdi mdi-emoticon-sad', 'top', 'center');
+                                //设置0.5s后返回管理页
+                                setTimeout(function(){
+                                    window.location.href='${pageContext.request.contextPath}<%=R.GLOBAL_SERVLET_INFO.ARTICLE_SERVLET.ARTICLE_SERVLET_URL_PATTERN%>?<%=R.REQUEST.REQUEST_METHOD%>=<%=R.GLOBAL_SERVLET_INFO.ARTICLE_SERVLET.ARTICLE_SERVLET_METHOD_TO_ARTICLE_MANAGEMENT_VIEW%>';
+                                },5e2);
                             }
-                        });
-                }else if('<%=R.REQUEST.REQUEST_FILED_OPEN_EDITOR_INTENTION_POST_ARTICLE%>'==='${sessionScope.intention}'){
-                    //设置请求url
-                    editor_intention=editor_intention_post;
-                    //设置提示语
-                    editor_intention_tips_failed='发布失败，请重新发布！';
-                    editor_intention_tips_success='发布成功！';
-                    //隐藏加载动画
-                    loading.loading('hide');
-                }else {
 
+
+
+                        },
+                        error: function () {
+                            //隐藏加载动画
+                            loading.loading('hide');
+                            loading.notify('数据拉取失败！请重新访问', 'danger', 3000, 'mdi mdi-emoticon-sad', 'top', 'center');
+                            //设置0.5s后返回管理页
+                            setTimeout(function(){
+                                window.loading.href='${pageContext.request.contextPath}<%=R.GLOBAL_SERVLET_INFO.ARTICLE_SERVLET.ARTICLE_SERVLET_URL_PATTERN%>?<%=R.REQUEST.REQUEST_METHOD%>=<%=R.GLOBAL_SERVLET_INFO.ARTICLE_SERVLET.ARTICLE_SERVLET_METHOD_TO_ARTICLE_MANAGEMENT_VIEW%>';
+                            },5e2);
+                        }
+                    });
+                    }else if('<%=R.REQUEST.REQUEST_FILED_OPEN_EDITOR_INTENTION_POST_ARTICLE%>'==='${sessionScope.intention}'){
+                        //设置请求url
+                        editor_intention=editor_intention_post;
+                        //设置提示语
+                        editor_intention_tips_failed='发布失败，请重新发布！';
+                        editor_intention_tips_success='发布成功！';
+                        //隐藏加载动画
+                        loading.loading('hide');
+                    }else {
+
+                    }
+                }catch (e) {
+                    loading.notify('数据拉取失败！请重新访问', 'danger', 3000, 'mdi mdi-emoticon-sad', 'top', 'center');
+                    //设置0.5s后返回管理页
+                    setTimeout(function(){
+                        window.location.href='${pageContext.request.contextPath}<%=R.GLOBAL_SERVLET_INFO.ARTICLE_SERVLET.ARTICLE_SERVLET_URL_PATTERN%>?<%=R.REQUEST.REQUEST_METHOD%>=<%=R.GLOBAL_SERVLET_INFO.ARTICLE_SERVLET.ARTICLE_SERVLET_METHOD_TO_ARTICLE_MANAGEMENT_VIEW%>';
+                    },5e2);
                 }
+
+            },
+            error: function () {
+                loading.notify('数据拉取失败！请重新访问', 'danger', 3000, 'mdi mdi-emoticon-sad', 'top', 'center');
+                //设置0.5s后返回管理页
+                setTimeout(function(){
+                    window.location.href='${pageContext.request.contextPath}<%=R.GLOBAL_SERVLET_INFO.ARTICLE_SERVLET.ARTICLE_SERVLET_URL_PATTERN%>?<%=R.REQUEST.REQUEST_METHOD%>=<%=R.GLOBAL_SERVLET_INFO.ARTICLE_SERVLET.ARTICLE_SERVLET_METHOD_TO_ARTICLE_MANAGEMENT_VIEW%>';
+                },5e2);
             }
         });
 
