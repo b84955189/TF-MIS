@@ -3,7 +3,7 @@
 <!DOCTYPE html>
 <html lang='pl'>
 <head>
-    <title>HTML5相册浏览插件 支持相片全屏浏览DEMO演示</title>
+    <title>海报相册</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, minimal-ui, user-scalable=no">
     <link href="${pageContext.request.contextPath}/static/gallery/css/bootstrap.min.css" rel="stylesheet" type="text/css">
