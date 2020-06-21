@@ -3,6 +3,7 @@
 <ul class="topbar-right">
     <li class="dropdown dropdown-profile">
         <a href="javascript:void(0)" data-toggle="dropdown">
+            <%--TODO: modify request user data method.--%>
             <img class="img-avatar img-avatar-48 m-r-10" src="${sessionScope.user.user_head_url}" alt="${sessionScope.user.display_name}" title="${sessionScope.user.display_name}" />
             <span>${sessionScope.user.display_name}<span class="caret"></span></span>
         </a>
