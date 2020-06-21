@@ -11,7 +11,7 @@
     <meta name="description" content="" />
     <meta name="keywords" content="" />
     <meta name="author" content="Jason." />
-    <link rel="shortcut icon" type="image/x-icon" href="favicon.ico" />
+    <link rel="shortcut icon" type="image/x-icon" href="${pageContext.request.contextPath}<%=R.GLOBAL_URL.GLOBAL_URL_WEB_FAVICON_ICON%>" />
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/static/light_year_front_ui/css/bootstrap.min.css" />
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/static/light_year_front_ui/css/materialdesignicons.min.css" />
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/static/light_year_front_ui/js/highlight/styles/agate.css" />
@@ -257,7 +257,9 @@
                 loading.loading('hide');
                 try{
                     article_data=JSON.parse(msg);
-                    //填充标题
+                    //填充页面标题
+                    $('title').text(article_data.<%=R.JSON.JSON_FILED_ARTICLE_FILED_ARTICLE_TITLE%>+' 详情页');
+                    //填充内容标题
                     $('.arc-title').text(article_data.<%=R.JSON.JSON_FILED_ARTICLE_FILED_ARTICLE_TITLE%>);
                     $('.arc-title').attr('href','${pageContext.request.contextPath}<%=R.GLOBAL_SERVLET_INFO.FRONT_STAGE_SERVLET.FRONT_STAGE_SERVLET_URL_PATTERN%>?<%=R.REQUEST.REQUEST_METHOD%>=<%=R.GLOBAL_SERVLET_INFO.FRONT_STAGE_SERVLET.FRONT_STAGE_SERVLET_METHOD_TO_ARTICLE_DETAIL_VIEW%>&<%=R.REQUEST.REQUEST_FILED_ARTICLE_UUID%>='+article_data.<%=R.JSON.JSON_FILED_ARTICLE_FILED_ARTICLE_UUID%>)
                     //填充阅读人数

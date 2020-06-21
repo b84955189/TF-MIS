@@ -5,6 +5,7 @@ import org.json.JSONObject;
 import service.FrontStageService;
 import utils.R;
 
+import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -38,6 +39,41 @@ public class FrontStageServlet extends BaseServlet{
             e.printStackTrace();
             response.sendRedirect(request.getContextPath()+R.GLOBAL_URL.GLOBAL_URL_INDEX_PAGE);
         }
+    }
+    /**
+     * 海报相册----应付作业用，并不想加
+     * TODO: delete the Test Method.
+     * @author Jason
+     * @date 7:34 PM 6/20/2020
+     * @param
+     * @return
+     */
+    protected void toPosterGalleryView(HttpServletRequest request,HttpServletResponse response) throws ServletException, IOException {
+        request.getRequestDispatcher(R.GLOBAL_URL.GLOBAL_URL_FRONT_STAGE_GALLERY_PAGE).forward(request,response);
+    }
+    /**
+     * 分类专栏搜索-绑定类型数据
+     * @author Jason
+     * @date 9:44 AM 6/21/2020
+     * @param
+     * @return
+     */
+    protected void toStartArticleTypeSearch(HttpServletRequest request,HttpServletResponse response) throws ServletException, IOException {
+        String articleTypeID = request.getParameter(R.REQUEST.REQUEST_FILED_ARTICLE_TYPE_FILED_ARTICLE_TYPE_ID);
+        if(articleTypeID!=null){
+            request.setAttribute(R.REQUEST.REQUEST_FILED_ARTICLE_TYPE_SEARCH_SNIPPET,articleTypeID);
+        }
+        request.getRequestDispatcher(R.GLOBAL_URL.GLOBAL_URL_HOME_PAGE).forward(request,response);
+    }
+    /**
+     * 转发至关于我页
+     * @author Jason
+     * @date 8:24 PM 6/20/2020
+     * @param
+     * @return
+     */
+    protected void toAboutMeView(HttpServletRequest request,HttpServletResponse response) throws ServletException, IOException {
+        request.getRequestDispatcher(R.GLOBAL_URL.GLOBAL_URL_FRONT_STAGE_ABOUT_ME_PAGE).forward(request,response);
     }
     /**
      * 获取文章

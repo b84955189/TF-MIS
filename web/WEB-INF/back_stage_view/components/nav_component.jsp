@@ -4,7 +4,7 @@
 
     <!-- logo -->
     <div id="logo" class="sidebar-header">
-        <a href="${pageContext.request.contextPath}<%=R.GLOBAL_URL.GLOBAL_URL_INDEX_PAGE%>"><img src="http://storage.lking.top/logo-sidebar.png" title="TF-MIS" alt="TF-MIS" width="200px" height="70px" /></a>
+        <a href="${pageContext.request.contextPath}<%=R.GLOBAL_SERVLET_INFO.SYSTEM_SERVLET.SYSTEM_SERVLET_URL_PATTERN%>?<%=R.REQUEST.REQUEST_METHOD%>=<%=R.GLOBAL_SERVLET_INFO.SYSTEM_SERVLET.SYSTEM_SERVLET_METHOD_TO_ADMIN_USER_VIEW%>"><img src="http://storage.lking.top/logo-sidebar.png" title="TF-MIS" alt="TF-MIS" width="200px" height="70px" /></a>
     </div>
     <div class="lyear-layout-sidebar-scroll">
 

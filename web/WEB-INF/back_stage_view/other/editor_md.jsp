@@ -4,7 +4,8 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>文章发布</title>
+    <link rel="shortcut icon" type="image/x-icon" href="${pageContext.request.contextPath}<%=R.GLOBAL_URL.GLOBAL_URL_WEB_FAVICON_ICON%>" />
     <!-- 移动设备优先 -->
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <!-- 新 Bootstrap4 核心 CSS 文件 -->
@@ -91,9 +92,10 @@
             </div>
 
         </div>
+        <!--文章海报 域-->
+        <input id="id_input_article_poster" type="hidden" name="<%=R.REQUEST.REQUEST_FILED_ARTICLE_POSTER%>"/>
         <div id="id_editor_md">
-		    <textarea id="id_editor_textarea" style="display:none;">输入文章内容，支持Markdown。
-		    </textarea>
+		    <textarea id="id_editor_textarea" style="display:none;">输入文章内容，支持Markdown。</textarea>
         </div>
 
         <%--摘要模态框--%>
@@ -101,13 +103,13 @@
             <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h6 class="modal-title" id="exampleModalCenterTitle">摘要</h6>
+                        <h6 class="modal-title" id="id-arc-summary-title">摘要</h6>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
                     <div class="modal-body">
-                        <textarea class="form-control" style="resize: none;height: 100px" name="<%=R.REQUEST.REQUEST_FILED_ARTICLE_SUMMARY%>" id="id_textarea_article_summary" maxlength="100" style="width: 100%;height: 100%;"></textarea>
+                        <textarea class="form-control" style="resize: none;height: 100px" name="<%=R.REQUEST.REQUEST_FILED_ARTICLE_SUMMARY%>" id="id_textarea_article_summary" maxlength="150" style="width: 100%;height: 100%;"></textarea>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>
@@ -117,6 +119,31 @@
             </div>
         </div>
     </form>
+
+    <%--海报模态框,在文章表单之外--%>
+    <div class="modal fade" id="id_article_poster_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h6 class="modal-title" id="id-arc-poster-title">海报</h6>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body" style="text-align: center">
+                    <form id="id_form_article_poster_image" method="post" enctype="multipart/form-data">
+                        <input type="file" name="<%=R.REQUEST.REQUEST_FILED_EDITOR_INSERT_IMAGE_FILED_NAME%>" id="id_input_file_article_poster"  hidden>
+                    </form>
+                    <input type="button" id="id_btn_upload_image" value="上传图片" class="btn btn-danger" />
+                </div>
+                <div class="modal-footer">
+                        <img id="id_img_article_poster" style="margin: 0 auto;display: none;" src=""/>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
 
 </div>
 <%--成功提示页--%>
@@ -162,6 +189,8 @@
     var editor_intention;
     var editor_intention_post='${pageContext.request.contextPath}<%=R.GLOBAL_SERVLET_INFO.ARTICLE_SERVLET.ARTICLE_SERVLET_URL_PATTERN%>?<%=R.REQUEST.REQUEST_METHOD%>=<%=R.GLOBAL_SERVLET_INFO.ARTICLE_SERVLET.ARTICLE_SERVLET_METHOD_TO_POST_ARTICLE%>';
     var editor_intention_update='${pageContext.request.contextPath}<%=R.GLOBAL_SERVLET_INFO.ARTICLE_SERVLET.ARTICLE_SERVLET_URL_PATTERN%>?<%=R.REQUEST.REQUEST_METHOD%>=<%=R.GLOBAL_SERVLET_INFO.ARTICLE_SERVLET.ARTICLE_SERVLET_METHOD_TO_UPDATE_ARTICLE%>';
+    //海报允许上传图片类型
+    var article_poster_img_allow_type=['.jpg','.png','.jpeg','.gif'];
     //编辑状态下的文章信息
     var article_data;
     //不同状态下的提示语
@@ -183,80 +212,176 @@
             warningClass: "badge badge-info",
             limitReachedClass: "badge badge-warning"
         });
+        //海报图片选择点击事件
+        var upload_btn_event=function () {
+            $('#id_input_file_article_poster').click();
+        };
+        var del_poster_btn_event=function(){
+            $('#id_input_article_poster').val('');
+            $('#id_img_article_poster').css('display','none');
+            $('#id_img_article_poster').attr('src','');
+            $('#id_btn_upload_image').val('上传海报');
+            $('#id_btn_upload_image').unbind('click',del_poster_btn_event);
+            $('#id_btn_upload_image').on('click',upload_btn_event);
+        };
+        $('#id_btn_upload_image').on('click',upload_btn_event);
+        //海报图片自动上传
+       $('#id_input_file_article_poster').on('change',function () {
+            let form_data=new FormData();
+            //检测文件类型是否被允许
+            let file_sign=false;
+            for(let i=0;i<article_poster_img_allow_type.length;i++){
+                if(this.files[0].name.endsWith(article_poster_img_allow_type[i])){
+                    file_sign=true;
+                }
+            }
+            //如果类型不允许
+            if(!file_sign){
+                loading.notify('图片类型不支持,请重新选择！', 'danger', 3000, 'mdi mdi-emoticon-sad', 'top', 'center');
+            }else{
+                //开启加载页
+                loading.loading('show');
+                form_data.append('<%=R.REQUEST.REQUEST_FILED_EDITOR_INSERT_IMAGE_FILED_NAME%>',this.files[0]);
+                $.ajax({
+                     url: '${pageContext.request.contextPath}<%=R.GLOBAL_SERVLET_INFO.IMAGE_UPLOAD_SERVLET.IMAGE_UPLOAD_SERVLET_URL_PATTERN%>?<%=R.REQUEST.REQUEST_METHOD%>=<%=R.GLOBAL_SERVLET_INFO.IMAGE_UPLOAD_SERVLET.IMAGE_UPLOAD_SERVLET_METHOD_TO_UPLOAD_IMAGE%>',
+                     type: 'post',
+                     data: form_data,
+                     timeout: 8000,
+                     cache: false,
+                     contentType: false,
+                     processData: false,
+                     success: function (msg) {
+                         //隐藏加载动画
+                         loading.loading('hide');
+                         try{
+                             let article_poster_data=JSON.parse(msg);
+                             $('#id_img_article_poster').css('display','block');
+                             $('#id_img_article_poster').attr('src',article_poster_data.url);
+                             $('#id_input_article_poster').val(article_poster_data.url);
+                             $('#id_btn_upload_image').val('删除海报');
+                             $('#id_btn_upload_image').unbind('click',upload_btn_event);
+                             $('#id_btn_upload_image').on('click',del_poster_btn_event);
+                             loading.notify('设置成功！','success',5000,'mdi mdi-emoticon-happy', 'top', 'center');
+                         }catch (e) {
+                             loading.notify('网络错误，请检查网络连接状态！！', 'danger', 3000, 'mdi mdi-emoticon-sad', 'top', 'center');
+                             $('#id_img_article_poster').css('display','none');
+                             $('#id_btn_upload_image').val('上传海报');
+                         }
+                     },
+                     error: function () {
+                         //隐藏加载动画
+                         loading.loading('hide');
+                         loading.notify('网络错误，请检查网络连接状态！！', 'danger', 3000, 'mdi mdi-emoticon-sad', 'top', 'center');
+                         $('#id_img_article_poster').css('display','none');
+                         $('#id_btn_upload_image').val('上传海报');
+                     }
+                 });
+            }
+
+
+       });
         // 获取文章类别
         $.ajax({
             type: 'post',
             url: '${pageContext.request.contextPath}<%=R.GLOBAL_SERVLET_INFO.ARTICLE_SERVLET.ARTICLE_SERVLET_URL_PATTERN%>?<%=R.REQUEST.REQUEST_METHOD%>=<%=R.GLOBAL_SERVLET_INFO.ARTICLE_SERVLET.ARTICLE_SERVLET_METHOD_TO_GET_ARTICLE_TYPES%>',
+            timeout: 8000,
             success: function (msg) {
+                try{
+                    let article_type_data=JSON.parse(msg).<%=R.JSON.JSON_FILED_DATA%>;
+                    for(let i=0;i<article_type_data.length;i++){
+                        $('#id_select_article_type').append('<option value="'+article_type_data[i].<%=R.JSON.JSON_FILED_ARTICLE_TYPE_FILED_ARTICLE_TYPE_ID%>+'">'+article_type_data[i].<%=R.JSON.JSON_FILED_ARTICLE_TYPE_FILED_ARTICLE_TYPE_NAME%>+'</option>');
+                    }
 
-                let article_type_data=JSON.parse(msg).<%=R.JSON.JSON_FILED_DATA%>;
-                for(let i=0;i<article_type_data.length;i++){
-                    $('#id_select_article_type').append('<option value="'+article_type_data[i].<%=R.JSON.JSON_FILED_ARTICLE_TYPE_FILED_ARTICLE_TYPE_ID%>+'">'+article_type_data[i].<%=R.JSON.JSON_FILED_ARTICLE_TYPE_FILED_ARTICLE_TYPE_NAME%>+'</option>');
-                }
-
-                //判断打开编辑器目的
-                if('<%=R.REQUEST.REQUEST_FILED_OPEN_EDITOR_INTENTION_EDIT_ARTICLE%>'==='${sessionScope.intention}'){
-                    //设置请求url
-                    editor_intention=editor_intention_update;
-                    //设置提示语
-                    editor_intention_tips_failed='更新失败，请重新尝试！';
-                    editor_intention_tips_success='更新成功！';
-                    //获取文章信息
-                    $.ajax({
+                    //判断打开编辑器目的
+                    if('<%=R.REQUEST.REQUEST_FILED_OPEN_EDITOR_INTENTION_EDIT_ARTICLE%>'==='${sessionScope.intention}'){
+                        //设置请求url
+                        editor_intention=editor_intention_update;
+                        //设置提示语
+                        editor_intention_tips_failed='更新失败，请重新尝试！';
+                        editor_intention_tips_success='更新成功！';
+                        //获取文章信息
+                        $.ajax({
                             url: '${pageContext.request.contextPath}<%=R.GLOBAL_SERVLET_INFO.ARTICLE_SERVLET.ARTICLE_SERVLET_URL_PATTERN%>?<%=R.REQUEST.REQUEST_METHOD%>=<%=R.GLOBAL_SERVLET_INFO.ARTICLE_SERVLET.ARTICLE_SERVLET_METHOD_TO_GET_ARTICLES%>&<%=R.REQUEST.REQUEST_FILED_ARTICLE_ID%>=${sessionScope.article_id}',
                             type: 'get',
                             data: {<%=R.REQUEST.REQUEST_FILED_ARTICLE_ID%>:${sessionScope.article_id}},
-                            timeout: 8000,
+                        timeout: 8000,
                             success: function (msg) {
-                                //隐藏加载动画
-                                loading.loading('hide');
-                                try{
-                                     article_data=JSON.parse(msg);
-                                    //填充隐藏域文章id
-                                    $('#id_input_hidden_article_id').val(article_data.<%=R.JSON.JSON_FILED_ARTICLE_FILED_ARTICLE_ID%>);
-                                    //填充标题
-                                    $('#id_input_article_title').val(article_data.<%=R.JSON.JSON_FILED_ARTICLE_FILED_ARTICLE_TITLE%>);
-                                    //填充下拉框
-                                    $("#id_select_article_type").each(function(){
-                                        $(this).find("option").eq(article_data.<%=R.JSON.JSON_FILED_ARTICLE_FILED_ARTICLE_TYPE%>).prop("selected",true);
-                                    });
-                                    //填充摘要
-                                    $('#id_textarea_article_summary').val(article_data.<%=R.JSON.JSON_FILED_ARTICLE_FILED_ARTICLE_SUMMARY%>);
-                                    //填充内容
-                                    $('#id_editor_textarea').val(article_data.<%=R.JSON.JSON_FILED_ARTICLE_FILED_ARTICLE_CONTENT%>);
-
-                                }catch (e) {
-                                    loading.notify('数据拉取失败！请重新访问', 'danger', 3000, 'mdi mdi-emoticon-sad', 'top', 'center');
-                                    //设置0.5s后返回管理页
-                                    setTimeout(function(){
-                                        window.location.href='${pageContext.request.contextPath}<%=R.GLOBAL_SERVLET_INFO.ARTICLE_SERVLET.ARTICLE_SERVLET_URL_PATTERN%>?<%=R.REQUEST.REQUEST_METHOD%>=<%=R.GLOBAL_SERVLET_INFO.ARTICLE_SERVLET.ARTICLE_SERVLET_METHOD_TO_ARTICLE_MANAGEMENT_VIEW%>';
-                                    },5e2);
+                            //隐藏加载动画
+                            loading.loading('hide');
+                            try{
+                                article_data=JSON.parse(msg);
+                                //填充隐藏域文章id
+                                $('#id_input_hidden_article_id').val(article_data.<%=R.JSON.JSON_FILED_ARTICLE_FILED_ARTICLE_ID%>);
+                                //填充标题
+                                $('#id_input_article_title').val(article_data.<%=R.JSON.JSON_FILED_ARTICLE_FILED_ARTICLE_TITLE%>);
+                                //填充下拉框
+                                $("#id_select_article_type").each(function(){
+                                    $(this).find("option").eq(article_data.<%=R.JSON.JSON_FILED_ARTICLE_FILED_ARTICLE_TYPE%>).prop("selected",true);
+                                });
+                                //填充摘要
+                                $('#id_textarea_article_summary').val(article_data.<%=R.JSON.JSON_FILED_ARTICLE_FILED_ARTICLE_SUMMARY%>);
+                                //填充海报
+                                if(article_data.<%=R.JSON.JSON_FILED_ARTICLE_FILED_ARTICLE_POSTER%>!=''){
+                                    $('#id_img_article_poster').css('display','block');
+                                    $('#id_img_article_poster').attr('src',article_data.<%=R.JSON.JSON_FILED_ARTICLE_FILED_ARTICLE_POSTER%>);
+                                    $('#id_input_article_poster').val(article_data.<%=R.JSON.JSON_FILED_ARTICLE_FILED_ARTICLE_POSTER%>);
+                                    $('#id_btn_upload_image').val('删除海报');
+                                    $('#id_btn_upload_image').unbind('click',upload_btn_event);
+                                    $('#id_btn_upload_image').on('click',del_poster_btn_event);
+                                }else{
+                                    $('#id_img_article_poster').css('display','none');
+                                    $('#id_btn_upload_image').val('上传海报');
                                 }
+                                //填充内容
+                                $('#id_editor_textarea').val(article_data.<%=R.JSON.JSON_FILED_ARTICLE_FILED_ARTICLE_CONTENT%>);
 
-
-
-                            },
-                             error: function () {
-                                 //隐藏加载动画
-                                 loading.loading('hide');
-                                 loading.notify('数据拉取失败！请重新访问', 'danger', 3000, 'mdi mdi-emoticon-sad', 'top', 'center');
-                                 //设置0.5s后返回管理页
-                                 setTimeout(function(){
-                                     window.loading.href='${pageContext.request.contextPath}<%=R.GLOBAL_SERVLET_INFO.ARTICLE_SERVLET.ARTICLE_SERVLET_URL_PATTERN%>?<%=R.REQUEST.REQUEST_METHOD%>=<%=R.GLOBAL_SERVLET_INFO.ARTICLE_SERVLET.ARTICLE_SERVLET_METHOD_TO_ARTICLE_MANAGEMENT_VIEW%>';
-                                 },5e2);
+                            }catch (e) {
+                                loading.notify('数据拉取失败！请重新访问', 'danger', 3000, 'mdi mdi-emoticon-sad', 'top', 'center');
+                                //设置0.5s后返回管理页
+                                setTimeout(function(){
+                                    window.location.href='${pageContext.request.contextPath}<%=R.GLOBAL_SERVLET_INFO.ARTICLE_SERVLET.ARTICLE_SERVLET_URL_PATTERN%>?<%=R.REQUEST.REQUEST_METHOD%>=<%=R.GLOBAL_SERVLET_INFO.ARTICLE_SERVLET.ARTICLE_SERVLET_METHOD_TO_ARTICLE_MANAGEMENT_VIEW%>';
+                                },5e2);
                             }
-                        });
-                }else if('<%=R.REQUEST.REQUEST_FILED_OPEN_EDITOR_INTENTION_POST_ARTICLE%>'==='${sessionScope.intention}'){
-                    //设置请求url
-                    editor_intention=editor_intention_post;
-                    //设置提示语
-                    editor_intention_tips_failed='发布失败，请重新发布！';
-                    editor_intention_tips_success='发布成功！';
-                    //隐藏加载动画
-                    loading.loading('hide');
-                }else {
 
+
+
+                        },
+                        error: function () {
+                            //隐藏加载动画
+                            loading.loading('hide');
+                            loading.notify('数据拉取失败！请重新访问', 'danger', 3000, 'mdi mdi-emoticon-sad', 'top', 'center');
+                            //设置0.5s后返回管理页
+                            setTimeout(function(){
+                                window.loading.href='${pageContext.request.contextPath}<%=R.GLOBAL_SERVLET_INFO.ARTICLE_SERVLET.ARTICLE_SERVLET_URL_PATTERN%>?<%=R.REQUEST.REQUEST_METHOD%>=<%=R.GLOBAL_SERVLET_INFO.ARTICLE_SERVLET.ARTICLE_SERVLET_METHOD_TO_ARTICLE_MANAGEMENT_VIEW%>';
+                            },5e2);
+                        }
+                    });
+                    }else if('<%=R.REQUEST.REQUEST_FILED_OPEN_EDITOR_INTENTION_POST_ARTICLE%>'==='${sessionScope.intention}'){
+                        //设置请求url
+                        editor_intention=editor_intention_post;
+                        //设置提示语
+                        editor_intention_tips_failed='发布失败，请重新发布！';
+                        editor_intention_tips_success='发布成功！';
+                        //隐藏加载动画
+                        loading.loading('hide');
+                    }else {
+
+                    }
+                }catch (e) {
+                    loading.notify('数据拉取失败！请重新访问', 'danger', 3000, 'mdi mdi-emoticon-sad', 'top', 'center');
+                    //设置0.5s后返回管理页
+                    setTimeout(function(){
+                        window.location.href='${pageContext.request.contextPath}<%=R.GLOBAL_SERVLET_INFO.ARTICLE_SERVLET.ARTICLE_SERVLET_URL_PATTERN%>?<%=R.REQUEST.REQUEST_METHOD%>=<%=R.GLOBAL_SERVLET_INFO.ARTICLE_SERVLET.ARTICLE_SERVLET_METHOD_TO_ARTICLE_MANAGEMENT_VIEW%>';
+                    },5e2);
                 }
+
+            },
+            error: function () {
+                loading.notify('数据拉取失败！请重新访问', 'danger', 3000, 'mdi mdi-emoticon-sad', 'top', 'center');
+                //设置0.5s后返回管理页
+                setTimeout(function(){
+                    window.location.href='${pageContext.request.contextPath}<%=R.GLOBAL_SERVLET_INFO.ARTICLE_SERVLET.ARTICLE_SERVLET_URL_PATTERN%>?<%=R.REQUEST.REQUEST_METHOD%>=<%=R.GLOBAL_SERVLET_INFO.ARTICLE_SERVLET.ARTICLE_SERVLET_METHOD_TO_ARTICLE_MANAGEMENT_VIEW%>';
+                },5e2);
             }
         });
 
@@ -277,6 +402,9 @@
             flowChart       : true,  // 默认不解析
             sequenceDiagram : true,  // 默认不解析
             path   : "${pageContext.request.contextPath}/static/editor_md/lib/",
+           imageUpload : true,
+           imageFormats : ["jpg", "jpeg", "gif", "png", "bmp", "webp"],
+           imageUploadURL : "${pageContext.request.contextPath}<%=R.GLOBAL_SERVLET_INFO.IMAGE_UPLOAD_SERVLET.IMAGE_UPLOAD_SERVLET_URL_PATTERN%>?<%=R.REQUEST.REQUEST_METHOD%>=<%=R.GLOBAL_SERVLET_INFO.IMAGE_UPLOAD_SERVLET.IMAGE_UPLOAD_SERVLET_METHOD_TO_UPLOAD_IMAGE%>",
            //Toolbar Icons
            toolbarIcons : function () {
                 /*TODO: add a article poster image setting button.*/
@@ -313,6 +441,15 @@
                 */
                 article_summary: function (cm, icon, cursor, selection) {
                     $('#id_article_summary_modal').modal('show');
+                },
+               /**
+                * @param {Object}      cm         CodeMirror对象
+                * @param {Object}      icon       图标按钮jQuery元素对象
+                * @param {Object}      cursor     CodeMirror的光标对象，可获取光标所在行和位置
+                * @param {String}      selection  编辑器选中的文本
+                */
+                article_poster: function (cm, icon, cursor, selection){
+                   $('#id_article_poster_modal').modal('show');
                 }
            }
 

@@ -7,7 +7,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
     <title>欢迎登陆|TF-MIS</title>
-    <link rel="icon" href="favicon.ico" type="image/ico">
+    <link rel="shortcut icon" type="image/x-icon" href="${pageContext.request.contextPath}<%=R.GLOBAL_URL.GLOBAL_URL_WEB_FAVICON_ICON%>" />
     <meta name="keywords" content="TF-MIS">
     <meta name="description" content="TF-MIS">
     <link href="${pageContext.request.contextPath}/static/light_year_ui/css/bootstrap.min.css" rel="stylesheet">

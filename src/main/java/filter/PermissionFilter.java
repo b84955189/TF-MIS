@@ -41,7 +41,11 @@ public class PermissionFilter implements Filter {
                 filterChain.doFilter(servletRequest,servletResponse);
                 return;
 
-            } else if (User.COMMON_USER == user.getUser_role()) {
+            }else if(R.GLOBAL_SERVLET_INFO.ARTICLE_SERVLET.ARTICLE_SERVLET_URL_PATTERN.equals(request.getServletPath())&&R.GLOBAL_SERVLET_INFO.ARTICLE_SERVLET.ARTICLE_SERVLET_METHOD_TO_GET_ARTICLE_TYPES.equals(method)) {
+                //放行
+                filterChain.doFilter(servletRequest,servletResponse);
+                return;
+            }else if (User.COMMON_USER == user.getUser_role()) {
                 //判断用户角色
                 //如果为普通用户，则跳转回该用户首页。
                 request.getRequestDispatcher(R.GLOBAL_URL.GLOBAL_URL_COMMON_USER_PAGE).forward(servletRequest, servletResponse);

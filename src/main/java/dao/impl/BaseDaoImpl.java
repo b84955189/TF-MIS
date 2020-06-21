@@ -46,6 +46,7 @@ public class BaseDaoImpl implements BaseDaoInter {
      */
     @Override
     public List<Object> getObjectList(Class beanType, String sqlSyntax, Object[] params) throws SQLException {
+        System.out.println(sqlSyntax);
         QueryRunner queryRunner = new QueryRunner(JDBCUtils.getDataSource());
         return queryRunner.query(sqlSyntax,new BeanListHandler<Object>(beanType),params);
     }

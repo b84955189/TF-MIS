@@ -18,6 +18,8 @@ public class Page {
     private int offset;
     //页码
     private int page;
+    //排序Filed
+    private String sort;
     //排序规则
     private String sortOrder;
     //查找类型

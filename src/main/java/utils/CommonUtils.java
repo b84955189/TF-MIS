@@ -1,5 +1,10 @@
 package utils;
 
+import com.sun.xml.internal.messaging.saaj.util.ByteOutputStream;
+
+import java.io.IOException;
+import java.io.InputStream;
+
 /**
  * 一般工具类
  * @author Jason
@@ -43,5 +48,31 @@ public class CommonUtils {
             resultArray[i]=Integer.parseInt(stringNumberArray[i]);
         }
         return resultArray;
+    }
+    /**
+     * 检测字符串是否为空
+     * @author Jason
+     * @date 8:39 AM 6/19/2020
+     * @param
+     * @return
+     */
+    public static boolean isEmpty(String str){
+        return str.trim().equals("");
+    }
+    /**
+     * 将输入流转为字节数组
+     * @author Jason
+     * @date 9:49 AM 6/19/2020
+     * @param
+     * @return
+     */
+    public static byte[] toByteArray(InputStream in) throws IOException {
+        ByteOutputStream byteOutputStream = new ByteOutputStream();
+        byte[] bytes = new byte[1024];
+        int len=0;
+        while ((len=in.read(bytes))!=-1){
+             byteOutputStream.write(bytes,0,len);
+        }
+        return  byteOutputStream.toByteArray();
     }
 }
